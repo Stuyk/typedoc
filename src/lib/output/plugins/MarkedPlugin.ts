@@ -1,6 +1,7 @@
 import * as FS from "fs-extra";
 import * as Path from "path";
 import * as Marked from "marked";
+import * as HighlightJS from "highlight.js";
 import * as Handlebars from "handlebars";
 
 import { Component, ContextAwareRendererComponent } from "../components";
@@ -107,7 +108,14 @@ export class MarkedPlugin extends ContextAwareRendererComponent {
      * @return A html string with syntax highlighting.
      */
     public getHighlighted(text: string, lang?: string): string {
-        return text;
+        lang = "javascript";
+
+        try {
+            return HighlightJS.highlight("javascript", text).value;
+        } catch (error) {
+            this.application.logger.warn(error.message);
+            return text;
+        }
     }
 
     /**
